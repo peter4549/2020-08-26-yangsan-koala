@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Yangsan  Koala</string>
+    <string name="location_permission_grant_request_message">애플리케이션을 사용하려면 위치 권한을 부여해야합니다.</string>
+</resources>

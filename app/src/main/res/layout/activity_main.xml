@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/text_view_confirmed_patient"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:padding="8dp"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="16sp"
+        app:autoSizeMaxTextSize="24sp"
+        app:autoSizeStepGranularity="2sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        tools:text="Confirmed Patient"/>
+
+    <TextView
+        android:id="@+id/text_view_cure"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:padding="8dp"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="16sp"
+        app:autoSizeMaxTextSize="24sp"
+        app:autoSizeStepGranularity="2sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_confirmed_patient"
+        tools:text="Cure"/>
+
+    <TextView
+        android:id="@+id/text_view_provided_path"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:padding="8dp"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="16sp"
+        app:autoSizeMaxTextSize="24sp"
+        app:autoSizeStepGranularity="2sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_cure"
+        tools:text="Provided Path"/>
+
+    <RelativeLayout
+        android:id="@+id/map_view_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_provided_path" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
