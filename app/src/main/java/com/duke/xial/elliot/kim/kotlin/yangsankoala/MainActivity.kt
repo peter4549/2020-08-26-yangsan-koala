@@ -8,8 +8,7 @@ import com.duke.xial.elliot.kim.kotlin.yangsankoala.Permissions.getPermissionsRe
 import com.duke.xial.elliot.kim.kotlin.yangsankoala.Permissions.hasAccessCoarseLocationPermissions
 import com.duke.xial.elliot.kim.kotlin.yangsankoala.Permissions.hasAccessFindLocationPermissions
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import net.daum.mf.map.api.MapView
 import org.jsoup.Jsoup
 import timber.log.Timber
@@ -25,7 +24,10 @@ class MainActivity : AppCompatActivity() {
 
         setupTimber()
 
-        getConfirmedPatients()
+        val job = Job()
+        CoroutineScope(Dispatchers.IO + job).launch {
+            getConfirmedPatients()
+        }
 
         val permissionsRequired = getPermissionsRequired(this)
         if (permissionsRequired.isNotEmpty()) {
@@ -57,19 +59,46 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun getConfirmedPatients(): Int = runBlocking(Dispatchers.IO) {
+    private suspend fun getConfirmedPatients() = withContext(Dispatchers.IO) {
         Jsoup.connect(BASE_URL).get().let { document ->
-            val crawlResults = document.body().getElementsByClass("cov_03")[0]
+            val tableBodies = document.body().getElementsByClass("cov_03")[0]
                 .getElementsByClass("route_box")[0]
-                .select("h4").select("li").toString()
-            println("PPPPPPP $crawlResults")
-            val k = document.body()
-            val z = document.body().getElementsByClass("cov_03")
-            try {
-                return@runBlocking Regex("[^0-9]").replace(crawlResults, "").toInt()
-            } catch (e: NumberFormatException) {
-                return@runBlocking 0
+                .select("li").select("tbody")
+
+            // Key: Date
+            // Pair: (Time, Place)
+            val timePlaceArrayList: ArrayList<Pair<String, Pair<String, String>>> = arrayListOf()
+            val timePlaceMap =
+                mutableMapOf<String, ArrayList<Pair<String, Pair<String, String>>>>()
+
+            for ((index, table) in tableBodies.withIndex()) { // 테이블을 도는거.
+
+                var date = ""
+                timePlaceArrayList.clear()
+
+                for (item in table.select("tr")) { // 줄을 도는거
+                    val th = item.select("th")
+                    if (th != null && th.isNotEmpty())
+                        date = th[0].text()
+
+                    if (item.getElementsByClass("bo-left").isEmpty())
+                        continue
+                    val time = item.getElementsByClass("bo-left")[0]?.text()!!
+                    val place = item.getElementsByClass("taL")[0].text()
+                    if (place == null || place.toString().isEmpty())
+                        continue
+                    val pair = Pair(time, place)
+                    println("UUUUUUU $date")
+                    println("OOOOOO $pair")
+                    timePlaceArrayList.add(Pair(date, pair))
+
+                }
+                println("=======++++++++++========AAAA")
+
+                timePlaceMap[index.toString()] = timePlaceArrayList.map { it.copy() } as ArrayList
             }
+
+            println(timePlaceMap)
         }
     }
 
@@ -78,6 +107,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val BASE_URL = "https://www.yangsan.go.kr/portal/contents/popup/corona/corona19.jsp"
+        private const val BASE_URL = "http://www.yangsan.go.kr/portal/contents/popup/corona/corona19.jsp"
     }
 }
