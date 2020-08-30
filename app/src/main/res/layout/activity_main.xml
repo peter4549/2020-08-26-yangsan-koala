@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorDefaultBackground"
     tools:context=".MainActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -13,63 +14,208 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/text_view_confirmed_patient"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
         android:gravity="center_vertical"
-        android:padding="8dp"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="16sp"
-        app:autoSizeMaxTextSize="24sp"
-        app:autoSizeStepGranularity="2sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        tools:text="Confirmed Patient"/>
-
-    <TextView
-        android:id="@+id/text_view_cure"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:gravity="center_vertical"
-        android:padding="8dp"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="16sp"
-        app:autoSizeMaxTextSize="24sp"
-        app:autoSizeStepGranularity="2sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_confirmed_patient"
-        tools:text="Cure"/>
-
-    <TextView
-        android:id="@+id/text_view_provided_path"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:gravity="center_vertical"
-        android:padding="8dp"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="16sp"
-        app:autoSizeMaxTextSize="24sp"
-        app:autoSizeStepGranularity="2sp"
+        android:backgroundTint="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_cure"
-        tools:text="Provided Path"/>
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:srcCompat="@drawable/ic_yangsan_logo"
+            android:contentDescription="@string/application_logo" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/app_name"
+            android:textColor="@android:color/black"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            app:autoSizeMaxTextSize="24sp"
+            app:autoSizeMinTextSize="20sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform" />
+
+        </LinearLayout>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <TextView
+        android:id="@+id/text_view_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="8dp"
+        android:background="@color/colorTeal"
+        android:textColor="@android:color/white"
+        app:autoSizeMaxTextSize="20sp"
+        app:autoSizeMinTextSize="16sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        tools:text="8월 28일 09시 기준" />
+
+    <LinearLayout
+        android:id="@+id/linear_layout_confirmed_patients"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/rounded_corner_red"
+        android:gravity="center_horizontal|top"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toStartOf="@+id/linear_layout_test_result"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_date">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="@string/confirmed_patients"
+            android:textColor="@android:color/white"
+            app:autoSizeMaxTextSize="20sp"
+            app:autoSizeMinTextSize="16sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform" />
+
+        <TextView
+            android:id="@+id/text_view_number_01"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            app:autoSizeMaxTextSize="20sp"
+            app:autoSizeMinTextSize="16sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform"
+            tools:text="18명" />
+
+        <TextView
+            android:id="@+id/text_view_span"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:textColor="@android:color/white"
+            app:autoSizeMaxTextSize="12sp"
+            app:autoSizeMinTextSize="8sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform"
+            tools:text="(완치 14명 포함)" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_test_result"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:background="@drawable/rounded_corner_indigo"
+        android:gravity="center_horizontal|top"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/linear_layout_confirmed_patients"
+        app:layout_constraintEnd_toStartOf="@+id/linear_layout_under_inspection"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/linear_layout_confirmed_patients"
+        app:layout_constraintTop_toTopOf="@+id/linear_layout_confirmed_patients">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="@string/test_result_negative"
+            android:textColor="@android:color/white"
+            app:autoSizeMaxTextSize="20sp"
+            app:autoSizeMinTextSize="16sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform" />
+
+        <TextView
+            android:id="@+id/text_view_number_02"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            app:autoSizeMaxTextSize="20sp"
+            app:autoSizeMinTextSize="16sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform"
+            tools:text="8,280명" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_under_inspection"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="4dp"
+        android:background="@drawable/rounded_corner_deep_purple"
+        android:gravity="center_horizontal|top"
+        android:orientation="vertical"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/linear_layout_test_result"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/linear_layout_test_result"
+        app:layout_constraintTop_toTopOf="@+id/linear_layout_test_result">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="@string/under_inspection"
+            android:textColor="@android:color/white"
+            app:autoSizeMaxTextSize="20sp"
+            app:autoSizeMinTextSize="16sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform" />
+
+        <TextView
+            android:id="@+id/text_view_number_03"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            app:autoSizeMaxTextSize="20sp"
+            app:autoSizeMinTextSize="16sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform"
+            tools:text="55명" />
+
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/map_view_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_provided_path" />
+        app:layout_constraintTop_toBottomOf="@+id/linear_layout_confirmed_patients">
+
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

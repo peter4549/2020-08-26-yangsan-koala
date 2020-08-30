@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.android.gms.oss-licenses-plugin'
 
 android {
     compileSdkVersion 30
@@ -41,6 +43,7 @@ dependencies {
     implementation files('libs/libDaumMapAndroid.jar')
     implementation files('libs/jsoup-1.13.1.jar')
     implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
+    implementation 'com.google.firebase:firebase-config:19.2.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
@@ -53,4 +56,9 @@ dependencies {
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation files('libs/libDaumMapAndroid.jar')
+
+    implementation 'com.google.android.material:material:1.2.0'
+
+    // Open Source Notices
+    implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
 }

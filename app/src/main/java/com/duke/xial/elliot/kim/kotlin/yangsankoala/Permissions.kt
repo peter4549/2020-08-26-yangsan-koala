@@ -8,8 +8,8 @@ import androidx.core.content.ContextCompat
 const val PERMISSIONS_REQUEST_CODE = 1000
 
 object Permissions {
-    val accessFindLocationRequired = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
-    val accessCoarseLocationRequired = arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION)
+    private val accessFindLocationRequired = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
+    private val accessCoarseLocationRequired = arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION)
 
     fun getPermissionsRequired(context: Context): Array<String> {
         var permissionsRequired = arrayOf<String>()

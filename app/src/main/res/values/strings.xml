@@ -1,4 +1,15 @@
 <resources>
-    <string name="app_name">Yangsan  Koala</string>
+    <string name="app_name">양산시 코로나맵</string>
     <string name="location_permission_grant_request_message">애플리케이션을 사용하려면 위치 권한을 부여해야합니다.</string>
+    <string name="confirmed_patients">확진환자</string>
+    <string name="test_result_negative">검사결과(음성)</string>
+    <string name="failed_to_load_data">데이터를 불러오지 못했습니다.</string>
+    <string name="under_inspection">검사중</string>
+    <string name="application_logo">Application Logo</string>
+    <string name="open_source_license">오픈소스 라이선스</string>
+    <string name="display_polyline">연결선 표시</string>
+    <string name="display_circles">범위 표시</string>
+    <string name="donation">후원하기</string>
+    <string name="options">옵션</string>
+    <string name="disinfection">Disinfection</string>
 </resources>
