@@ -1,6 +1,10 @@
 package com.duke.xial.elliot.kim.kotlin.yangsankoala
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.widget.Toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,5 +32,29 @@ private fun printHashKey(context: Context) {
 fun showToast(context: Context, text: String, duration: Int = Toast.LENGTH_LONG) {
     CoroutineScope(Dispatchers.Main).launch {
         Toast.makeText(context, text, duration).show()
+    }
+}
+
+fun getVersionName(context: Context): String {
+    return try {
+        context.packageManager.getPackageInfo(context.packageName, 0).versionName
+    } catch (e: PackageManager.NameNotFoundException) {
+        e.printStackTrace()
+        return "version info not found"
+    }
+}
+
+fun goToPlayStore(context: Context) {
+    try {
+        context.startActivity(
+            Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=${context.packageName}"))
+        )
+    } catch (e: ActivityNotFoundException) {
+        context.startActivity(
+            Intent (
+                Intent.ACTION_VIEW,
+                Uri.parse("https://play.google.com/store/apps/details?id=${context.packageName}")
+            )
+        )
     }
 }

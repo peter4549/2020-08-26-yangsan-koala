@@ -3,9 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/ic_callout_balloon_128"
+    android:background="@drawable/ic_speech_bubble_ddd"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
     android:elevation="8dp">
 
     <TextView
@@ -39,10 +41,12 @@
         android:id="@+id/text_view_date_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginBottom="20dp"
         android:lineSpacingMultiplier="1.1"
         android:paddingTop="4dp"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp"
+        android:textColor="#1a237e"
         app:autoSizeMaxTextSize="12sp"
         app:autoSizeMinTextSize="8sp"
         app:autoSizeStepGranularity="2sp"
@@ -56,13 +60,11 @@
         android:id="@+id/image_view_disinfection"
         android:layout_width="16dp"
         android:layout_height="16dp"
-        android:layout_marginStart="4dp"
         android:layout_marginEnd="8dp"
         android:contentDescription="@string/disinfection"
         app:layout_constraintBottom_toBottomOf="@+id/text_view_date_time"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/text_view_date_time"
-        app:layout_constraintTop_toTopOf="@+id/text_view_date_time"
         app:srcCompat="@drawable/ic_baseline_check_circle_24" />
 
 

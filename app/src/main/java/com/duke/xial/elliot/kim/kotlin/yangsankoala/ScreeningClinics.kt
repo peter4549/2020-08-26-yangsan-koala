@@ -4,9 +4,9 @@ import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 
 object ScreeningClinics {
-    private const val CLINIC_01 = "베데스다병원"
-    private const val CLINIC_02 = "양산부산대학교병원"
-    private const val CLINIC_03 = "양산시 보건소"
+    private const val CLINIC_01 = "베데스다병원_055-392-5220,5227"
+    private const val CLINIC_02 = "양산부산대학교병원_055-384-9901"
+    private const val CLINIC_03 = "양산시 보건소_055-360-1476"
 
     private val screeningClinics = mutableMapOf(
         CLINIC_01 to Pair(35.3532324484062, 129.043600274679),

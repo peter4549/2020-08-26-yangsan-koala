@@ -24,13 +24,14 @@ object ConfirmedPatients {
                 val confirmedPatients =
                     document.body().getElementsByClass("confirmed_patient")
 
-                var id = -1
+                var id: Int
                 for (confirmedPatient in confirmedPatients) {
                     id = confirmedPatient.getElementById("id").text().toInt()
                     val dateTimes = arrayListOf<String>()
                     val places = arrayListOf<String>()
                     val longitudeLatitudes = arrayListOf<Pair<Double, Double>>()
                     val disinfection = arrayListOf<Boolean>()
+                    var region = ""
 
                     for ((index, data) in confirmedPatient
                         .getElementsByClass("data")
@@ -40,9 +41,12 @@ object ConfirmedPatients {
                         places.add(index, dataStrings[1])
                         longitudeLatitudes.add(index, Pair(dataStrings[2].toDouble(), dataStrings[3].toDouble()))
                         disinfection.add(index, dataStrings[4].toBoolean())
+                        if (id > 10000)
+                            region = dataStrings[5]
                     }
                     results.add(ConfirmedPatientModel(id = id, dateTimes = dateTimes,
-                        places = places, positions = longitudeLatitudes, disinfection = disinfection))
+                        places = places, positions = longitudeLatitudes, disinfection = disinfection,
+                        region = region))
                 }
                 return results
             } catch (e: Exception) {
@@ -91,7 +95,7 @@ object ConfirmedPatients {
                         ",true"
                     else
                         ",false"
-                    itemName = itemText
+                    itemName = "$itemText,${patient.region}"
                     tag = patient.id
                     mapPoint = MapPoint.mapPointWithGeoCoord(patient.positions[index].first,
                         patient.positions[index].second)
@@ -118,28 +122,28 @@ data class ConfirmedPatientModel(val id: Int,
                                  val places: ArrayList<String>,
                                  val positions:
                                  ArrayList<Pair<Double, Double>>,
-                                 val disinfection: ArrayList<Boolean>) {
+                                 val disinfection: ArrayList<Boolean>,
+                                 val region: String = "") {
     fun getPolyline(): MapPolyline {
         val polyline = MapPolyline()
         polyline.tag = id
         polyline.lineColor = Color.argb(112, 255, 51, 0)
 
-        for(position in positions) {
-            polyline.addPoint(MapPoint.mapPointWithGeoCoord(position.first, position.second))
-        }
+        polyline.addPoints(positions.map { MapPoint.mapPointWithGeoCoord(it.first, it.second) }.toTypedArray())
 
         return polyline
     }
 
     fun getCircles(radius: Int = 320): ArrayList<MapCircle> {
         val circles = arrayListOf<MapCircle>()
-        for (position in positions) {
-            circles.add(MapCircle(position.toMapPointWithGeoCoord(), radius,
+
+        circles.addAll(positions.map {
+            MapCircle(it.toMapPointWithGeoCoord(), radius,
                 Color.argb(112, 255, 0, 0),
                 Color.argb(112, 255, 255, 0)).apply {
                 tag = id
-            })
-        }
+            }
+        })
 
         return circles
     }

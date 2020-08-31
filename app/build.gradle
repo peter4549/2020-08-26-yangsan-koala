@@ -12,7 +12,7 @@ android {
         applicationId "com.duke.xial.elliot.kim.kotlin.yangsankoala"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 1
+        versionCode 2
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -31,6 +31,36 @@ android {
             reset()
             include 'x86', 'x86_64', 'armeabi-v7a', 'armeabi'
             universalApk false
+        }
+    }
+}
+
+ext.abiCodes = ['armeabi':1, 'armeabi-v7a':2, x86:3, x86_64:4]
+
+import com.android.build.OutputFile
+
+android.applicationVariants.all { variant ->
+
+    // Assigns a different version code for each output APK
+    // other than the universal APK.
+    variant.outputs.each { output ->
+
+        // Stores the value of ext.abiCodes that is associated with the ABI for this variant.
+        def baseAbiVersionCode =
+                // Determines the ABI for this variant and returns the mapped value.
+                project.ext.abiCodes.get(output.getFilter(OutputFile.ABI))
+
+        // Because abiCodes.get() returns null for ABIs that are not mapped by ext.abiCodes,
+        // the following code does not override the version code for universal APKs.
+        // However, because we want universal APKs to have the lowest version code,
+        // this outcome is desirable.
+        if (baseAbiVersionCode != null) {
+
+            // Assigns the new version code to versionCodeOverride, which changes the version code
+            // for only the output APK, not for the variant itself. Skipping this step simply
+            // causes Gradle to use the value of variant.versionCode for the APK.
+            output.versionCodeOverride =
+                    baseAbiVersionCode * 1000 + variant.versionCode
         }
     }
 }
@@ -59,6 +89,11 @@ dependencies {
 
     implementation 'com.google.android.material:material:1.2.0'
 
+    // AdMob
+    implementation 'com.google.android.gms:play-services-ads:19.3.0'
+
     // Open Source Notices
     implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
+
+    implementation 'com.anjlab.android.iab.v3:library:1.0.44'
 }

@@ -7,11 +7,18 @@
         <item name="colorAccent">@color/colorAccent</item>
 
         <item name="android:textViewStyle">@style/TextViewStyle</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownListViewStyle</item>
     </style>
 
     <style name="TextViewStyle" parent="@android:style/Widget.DeviceDefault.TextView">
         <item name="android:fontFamily">@font/font_family_nexon_lv2_gothic_bold</item>
         <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="DropDownListViewStyle">
+        <item name="android:divider">#B0B0B0</item>
+        <item name="android:dividerHeight">0.5dp</item>
+        <item name="android:fontFamily">@font/font_family_nexon_lv2_gothic_bold</item>
     </style>
 
 </resources>

@@ -3,25 +3,24 @@ package com.duke.xial.elliot.kim.kotlin.yangsankoala
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import com.duke.xial.elliot.kim.kotlin.yangsankoala.ConfirmedPatients.createPatientMarkers
 import com.duke.xial.elliot.kim.kotlin.yangsankoala.ConfirmedPatients.loadConfirmedPatients
-import com.duke.xial.elliot.kim.kotlin.yangsankoala.Permissions.getPermissionsRequired
-import com.duke.xial.elliot.kim.kotlin.yangsankoala.Permissions.hasAccessCoarseLocationPermissions
-import com.duke.xial.elliot.kim.kotlin.yangsankoala.Permissions.hasAccessFindLocationPermissions
 import com.duke.xial.elliot.kim.kotlin.yangsankoala.ScreeningClinics.createClinicsMarkers
 import com.duke.xial.elliot.kim.kotlin.yangsankoala.SituationNotificationKey.CONFIRMED_PATIENTS
 import com.duke.xial.elliot.kim.kotlin.yangsankoala.SituationNotificationKey.DATE
 import com.duke.xial.elliot.kim.kotlin.yangsankoala.SituationNotificationKey.SPAN
 import com.duke.xial.elliot.kim.kotlin.yangsankoala.SituationNotificationKey.TEST_RESULTS
 import com.duke.xial.elliot.kim.kotlin.yangsankoala.SituationNotificationKey.UNDER_INSPECTION
+import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main_drawer.*
@@ -35,9 +34,12 @@ import timber.log.Timber
 
 class MainActivity : AppCompatActivity(), MapView.POIItemEventListener, MapView.CurrentLocationEventListener {
 
+    lateinit var adRequest: AdRequest
     private var confirmedPatients: ArrayList<ConfirmedPatientModel>? = null
     private var displayCircles = true
     private var displayPolyline = true
+    private var mapTypePosition = 0
+    private var exitDialogFragment = ExitDialogFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,17 +48,19 @@ class MainActivity : AppCompatActivity(), MapView.POIItemEventListener, MapView.
         // Hash Key: Dq8Gg7LDtrK2P1vH4eJulfzthIY=
         // printHashKey(this)
 
-        setSupportActionBar(toolbar)
-        setMenuItemClickActions()
-
         setupTimber()
         restoreOptions()
+
+        adRequest = AdRequest.Builder().build()
+        setSupportActionBar(toolbar)
+        setMenuItemClickActions()
 
         @Suppress("SpellCheckingInspection")
         // Kakao Maps
         val mapView = MapView(this)
         map_view_container.addView(mapView)
         mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(35.3349920568695, 129.037272788817), true)
+        setSpinner(spinner_map_type, mapView)
 
         // Crawling
         val job = Job()
@@ -71,22 +75,21 @@ class MainActivity : AppCompatActivity(), MapView.POIItemEventListener, MapView.
                 initializeMapViewOptions(mapView)
             }
         }
-
-        val permissionsRequired = getPermissionsRequired(this)
-        if (permissionsRequired.isNotEmpty()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                requestPermissions(
-                    permissionsRequired,
-                    PERMISSIONS_REQUEST_CODE
-                )
-        }
     }
 
     private fun initializeMapViewOptions(mapView: MapView) {
         mapView.currentLocationTrackingMode =
-            MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving
+            MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
         mapView.setZoomLevel(5, true)
         mapView.setCalloutBalloonAdapter(CustomCalloutBalloonAdapter())
+        mapView.mapType = when(mapTypePosition) {
+            1 -> MapView.MapType.Satellite
+            2 -> MapView.MapType.Hybrid
+            else -> MapView.MapType.Standard
+        }
+        mapView.setCurrentLocationEventListener(this)
+        mapView.setPOIItemEventListener(this)
+
         setMarkers(mapView)
 
         if (displayCircles)
@@ -141,31 +144,37 @@ class MainActivity : AppCompatActivity(), MapView.POIItemEventListener, MapView.
         text_view_open_source_licenses.setOnClickListener {
             startActivity(Intent(this, OssLicensesMenuActivity::class.java))
         }
+        text_view_donation.setOnClickListener {
+            startActivity(Intent(this, DonationActivity::class.java))
+        }
+    }
+
+    private fun setSpinner(spinner: Spinner, mapView: MapView) {
+        spinner.adapter = ArrayAdapter(this,
+            R.layout.item_view_spinner, arrayOf(
+                "일반", "위성", "하이브리드"
+            ))
+        spinner.setSelection(mapTypePosition)
+        
+        spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, position: Int, l: Long) {
+                when (position) {
+                    0 -> mapView.mapType = MapView.MapType.Standard
+                    1 -> mapView.mapType = MapView.MapType.Satellite
+                    2 -> mapView.mapType = MapView.MapType.Hybrid
+                }
+                mapTypePosition = position
+            }
+
+            override fun onNothingSelected(adapterView: AdapterView<*>?) {  }
+        }
     }
 
     override fun onBackPressed() {
         if (drawer_layout_activity_main.isDrawerOpen(GravityCompat.END))
             drawer_layout_activity_main.closeDrawer(GravityCompat.END)
-        else
-            super.onBackPressed()
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<String>, grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PERMISSIONS_REQUEST_CODE) {
-            if (PackageManager.PERMISSION_GRANTED == grantResults.firstOrNull()) {
-                if (hasAccessFindLocationPermissions(this))
-                    Timber.d("permission ACCESS_FINE_LOCATION has been granted")
-                if (hasAccessCoarseLocationPermissions(this))
-                    Timber.d("permission ACCESS_COARSE_LOCATION has been granted")
-            } else {
-                if (!hasAccessFindLocationPermissions(this))
-                    showToast(this, getString(R.string.location_permission_grant_request_message))
-                if (!hasAccessCoarseLocationPermissions(this))
-                    showToast(this, getString(R.string.location_permission_grant_request_message))
-            }
+        else {
+            exitDialogFragment.show(supportFragmentManager, TAG)
         }
     }
 
@@ -196,8 +205,7 @@ class MainActivity : AppCompatActivity(), MapView.POIItemEventListener, MapView.
         val clinicMarkers = createClinicsMarkers()
         val patientMarkers = createPatientMarkers((confirmedPatients ?: arrayListOf()))
 
-        for (marker in (clinicMarkers + patientMarkers))
-            mapView.addPOIItem(marker)
+        mapView.addPOIItems((clinicMarkers + patientMarkers).toTypedArray())
     }
 
     private fun setPolyline(mapView: MapView) {
@@ -223,6 +231,7 @@ class MainActivity : AppCompatActivity(), MapView.POIItemEventListener, MapView.
         getSharedPreferences(PREFERENCES_OPTIONS, Context.MODE_PRIVATE).edit()
             .putBoolean(KEY_DISPLAY_CIRCLES, displayCircles)
             .putBoolean(KEY_DISPLAY_POLYLINE, displayPolyline)
+            .putInt(KEY_MAP_TYPE_POSITION, mapTypePosition)
             .apply()
     }
 
@@ -230,32 +239,33 @@ class MainActivity : AppCompatActivity(), MapView.POIItemEventListener, MapView.
         val preferences =  getSharedPreferences(PREFERENCES_OPTIONS, Context.MODE_PRIVATE)
         displayCircles = preferences.getBoolean(KEY_DISPLAY_CIRCLES, true)
         displayPolyline = preferences.getBoolean(KEY_DISPLAY_POLYLINE, true)
+        mapTypePosition = preferences.getInt(KEY_MAP_TYPE_POSITION, 0)
     }
 
     // Start: POIItemEventListener
-    override fun onPOIItemSelected(p0: MapView?, p1: MapPOIItem?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onCalloutBalloonOfPOIItemTouched(p0: MapView?, p1: MapPOIItem?) {
-        TODO("Not yet implemented")
-    }
-
+    override fun onPOIItemSelected(p0: MapView?, p1: MapPOIItem?) {  }
+    override fun onCalloutBalloonOfPOIItemTouched(p0: MapView?, p1: MapPOIItem?) {  }
     override fun onCalloutBalloonOfPOIItemTouched(
         p0: MapView?,
         p1: MapPOIItem?,
         p2: MapPOIItem.CalloutBalloonButtonType?
     ) {
-        TODO("Not yet implemented")
+        if (p1?.tag!! < 1) {
+            val placePhoneNumber = p1.itemName?.split("_")
+            CallDialogFragment(
+                place = placePhoneNumber?.get(0),
+                phoneNumber = placePhoneNumber?.get(1)
+            ).show(supportFragmentManager, TAG)
+        }
     }
-
-    override fun onDraggablePOIItemMoved(p0: MapView?, p1: MapPOIItem?, p2: MapPoint?) {
-        TODO("Not yet implemented")
-    }
+    override fun onDraggablePOIItemMoved(p0: MapView?, p1: MapPOIItem?, p2: MapPoint?) {  }
     // End: POIItemEventListener
 
     // Start: CurrentLocationEventListener
-    override fun onCurrentLocationUpdate(p0: MapView?, p1: MapPoint?, p2: Float) {  }
+    override fun onCurrentLocationUpdate(mapView: MapView?, p1: MapPoint?, p2: Float) {
+        mapView?.currentLocationTrackingMode =
+            MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving
+    }
     override fun onCurrentLocationDeviceHeadingUpdate(p0: MapView?, p1: Float) {  }
     override fun onCurrentLocationUpdateFailed(p0: MapView?) {  }
     override fun onCurrentLocationUpdateCancelled(p0: MapView?) {  }
@@ -268,14 +278,25 @@ class MainActivity : AppCompatActivity(), MapView.POIItemEventListener, MapView.
 
         override fun getCalloutBalloon(poiItem: MapPOIItem): View {
             if (poiItem.tag < 1) {
+                val namePhoneNumberStrings = poiItem.itemName.split("_")
                 calloutBalloon.text_view_patient_id.text = ""
-                calloutBalloon.text_view_date_time.text = ""
-                calloutBalloon.text_view_place.text = poiItem.itemName
+                calloutBalloon.text_view_place.text = namePhoneNumberStrings[0]
                 calloutBalloon.image_view_disinfection.visibility = View.GONE
-            } else {
-                calloutBalloon.text_view_patient_id.text = poiItem.tag.toString()
 
+                // Used to display phone numbers
+                calloutBalloon.text_view_date_time.text = namePhoneNumberStrings[1]
+                calloutBalloon.text_view_date_time.isClickable = true
+            } else {
                 val dateTimePlace = poiItem.itemName.split(",")
+
+                // Numbers exceeding 10000 refer to patients from other regions
+                if (poiItem.tag > 10000) {
+                    val otherRegionText = "${dateTimePlace[3]} ${poiItem.tag - 10000}"  // Region name
+                    calloutBalloon.text_view_patient_id.text = otherRegionText
+                } else {
+                    calloutBalloon.text_view_patient_id.text = poiItem.tag.toString()
+                }
+
                 calloutBalloon.text_view_date_time.text = dateTimePlace[0]
                 calloutBalloon.text_view_place.text = dateTimePlace[1]
                 calloutBalloon.image_view_disinfection.visibility = View.VISIBLE
@@ -296,5 +317,7 @@ class MainActivity : AppCompatActivity(), MapView.POIItemEventListener, MapView.
         private const val PREFERENCES_OPTIONS = "yangsan_koala_preferences_options"
         private const val KEY_DISPLAY_CIRCLES = "key_display_circles"
         private const val KEY_DISPLAY_POLYLINE = "key_display_polyline"
+        private const val KEY_MAP_TYPE_POSITION = "key_map_type_position"
+        private const val TAG = "MainActivity"
     }
 }

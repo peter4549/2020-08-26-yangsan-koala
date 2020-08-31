@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">양산시 코로나맵</string>
+    <string name="ad_mob_app_id">ca-app-pub-2713759975650849~1957307321</string>
+    <string name="banner_ad_unit_id">ca-app-pub-2713759975650849/1765735635</string>
     <string name="location_permission_grant_request_message">애플리케이션을 사용하려면 위치 권한을 부여해야합니다.</string>
     <string name="confirmed_patients">확진환자</string>
     <string name="test_result_negative">검사결과(음성)</string>
@@ -12,4 +14,15 @@
     <string name="donation">후원하기</string>
     <string name="options">옵션</string>
     <string name="disinfection">Disinfection</string>
+    <string name="exit">종료</string>
+    <string name="update">업데이트</string>
+    <string name="later">나중에</string>
+    <string name="splash_image">Splash image</string>
+    <string name="ok">확인</string>
+    <string name="write_review">리뷰 쓰기</string>
+    <string name="exit_message">앱을 종료하시겠습니까?</string>
+    <string name="map_type">지도 타입</string>
+    <string name="dropdown_arrow">Dropdown arrow</string>
+    <string name="make_a_call">전화 걸기</string>
+    <string name="donate">후원하기</string>
 </resources>
