@@ -1,4 +1,4 @@
-package com.duke.xial.elliot.kim.kotlin.yangsankoala
+package com.duke.xial.elliot.kim.kotlin.yangsankoala.data
 
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint

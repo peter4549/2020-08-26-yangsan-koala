@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DonationActivity">
+    tools:context=".activities.DonationActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -18,31 +18,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="@string/donate"
-            android:textColor="@android:color/black"
-            android:gravity="center_vertical"
-            android:fontFamily="@font/font_family_nexon_lv2_gothic_bold"
-            android:padding="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            app:autoSizeMaxTextSize="20sp"
-            app:autoSizeMinTextSize="16sp"
-            app:autoSizeStepGranularity="2sp"
-            app:autoSizeTextType="uniform" />
-
-    </androidx.appcompat.widget.Toolbar>
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/donate"/>
 
     <TextView
         android:id="@+id/text_view_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="커피 한 잔 값의 후원은 개발자에게 큰 힘이 됩니다."
+        android:layout_marginBottom="32dp"
+        android:text="커피 한 잔의 후원은 개발자에게 큰 힘이 됩니다."
         app:layout_constraintBottom_toTopOf="@+id/frame_layout_donate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -66,7 +50,8 @@
             android:background="?attr/selectableItemBackground"
             android:textColor="@android:color/white"
             android:text="@string/donate"
-            android:fontFamily="@font/font_family_nexon_lv2_gothic_medium" />
+            android:elevation="8dp"
+            android:fontFamily="@font/font_family_nexon_lv2_gothic_bold" />
 
     </FrameLayout>
 

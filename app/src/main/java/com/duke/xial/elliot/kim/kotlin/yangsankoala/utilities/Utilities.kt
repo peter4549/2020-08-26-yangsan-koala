@@ -1,5 +1,6 @@
-package com.duke.xial.elliot.kim.kotlin.yangsankoala
+package com.duke.xial.elliot.kim.kotlin.yangsankoala.utilities
 
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent

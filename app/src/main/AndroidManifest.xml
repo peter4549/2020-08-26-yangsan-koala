@@ -17,9 +17,10 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".DonationActivity"></activity>
+        <activity android:name=".licenses.OpenSourceLicenseActivity"></activity>
+        <activity android:name=".activities.DonationActivity" />
         <activity
-            android:name=".SplashActivity"
+            android:name=".activities.SplashActivity"
             android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,7 +33,7 @@
             android:name="com.kakao.sdk.AppKey"
             android:value="aa1e17a3d682d4310333a1714d901c80" />
 
-        <activity android:name=".MainActivity" />
+        <activity android:name=".activities.MainActivity" />
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"

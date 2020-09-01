@@ -12,4 +12,5 @@
 
     <color name="colorDefaultBackground">#e1f5fe</color>
     <color name="colorMenuText">#404040</color>
+    <color name="colorLightGrey">#A0A0A0</color>
 </resources>

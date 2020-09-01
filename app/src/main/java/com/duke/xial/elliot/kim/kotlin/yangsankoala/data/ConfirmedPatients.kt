@@ -1,11 +1,11 @@
-package com.duke.xial.elliot.kim.kotlin.yangsankoala
+package com.duke.xial.elliot.kim.kotlin.yangsankoala.data
 
 import android.graphics.Color
-import com.duke.xial.elliot.kim.kotlin.yangsankoala.SituationNotificationKey.CONFIRMED_PATIENTS
-import com.duke.xial.elliot.kim.kotlin.yangsankoala.SituationNotificationKey.DATE
-import com.duke.xial.elliot.kim.kotlin.yangsankoala.SituationNotificationKey.SPAN
-import com.duke.xial.elliot.kim.kotlin.yangsankoala.SituationNotificationKey.TEST_RESULTS
-import com.duke.xial.elliot.kim.kotlin.yangsankoala.SituationNotificationKey.UNDER_INSPECTION
+import com.duke.xial.elliot.kim.kotlin.yangsankoala.data.SituationNotificationKey.CONFIRMED_PATIENTS
+import com.duke.xial.elliot.kim.kotlin.yangsankoala.data.SituationNotificationKey.DATE
+import com.duke.xial.elliot.kim.kotlin.yangsankoala.data.SituationNotificationKey.SPAN
+import com.duke.xial.elliot.kim.kotlin.yangsankoala.data.SituationNotificationKey.TEST_RESULTS
+import com.duke.xial.elliot.kim.kotlin.yangsankoala.data.SituationNotificationKey.UNDER_INSPECTION
 import net.daum.mf.map.api.MapCircle
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
@@ -44,9 +44,11 @@ object ConfirmedPatients {
                         if (id > 10000)
                             region = dataStrings[5]
                     }
-                    results.add(ConfirmedPatientModel(id = id, dateTimes = dateTimes,
+                    results.add(
+                        ConfirmedPatientModel(id = id, dateTimes = dateTimes,
                         places = places, positions = longitudeLatitudes, disinfection = disinfection,
-                        region = region))
+                        region = region)
+                    )
                 }
                 return results
             } catch (e: Exception) {

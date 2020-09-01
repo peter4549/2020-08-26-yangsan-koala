@@ -9,30 +9,13 @@
     android:focusable="true">
 
     <TextView
-        android:id="@+id/text_view_title"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@color/colorTeal"
-        android:gravity="center"
-        android:padding="8dp"
-        android:text="@string/make_a_call"
-        android:textColor="@android:color/white"
-        app:autoSizeMaxTextSize="18sp"
-        app:autoSizeMinTextSize="16sp"
-        app:autoSizeStepGranularity="2sp"
-        app:autoSizeTextType="uniform"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
         android:id="@+id/text_view_place"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingTop="4dp"
+        android:paddingTop="8dp"
         android:paddingBottom="4dp"
-        android:paddingEnd="8dp"
-        android:paddingStart="8dp"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
         android:gravity="center_vertical"
         tools:text="양산부산대학교병원"
         app:autoSizeMaxTextSize="16sp"
@@ -41,7 +24,7 @@
         app:autoSizeTextType="uniform"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_title" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/text_view_phone_number"
@@ -50,14 +33,14 @@
         android:maxLines="1"
         android:ellipsize="end"
         tools:text="000-000-0000"
+        android:paddingBottom="4dp"
         android:paddingEnd="8dp"
         android:paddingStart="8dp"
-        android:paddingBottom="8dp"
         android:paddingTop="8dp"
         android:gravity="center_vertical"
-        app:autoSizeMaxTextSize="18sp"
-        app:autoSizeMinTextSize="16sp"
         app:autoSizeStepGranularity="2sp"
+        app:autoSizeMaxTextSize="16sp"
+        app:autoSizeMinTextSize="14sp"
         app:autoSizeTextType="uniform"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

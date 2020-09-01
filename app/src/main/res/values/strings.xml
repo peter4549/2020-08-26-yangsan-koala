@@ -2,6 +2,9 @@
     <string name="app_name">양산시 코로나맵</string>
     <string name="ad_mob_app_id">ca-app-pub-2713759975650849~1957307321</string>
     <string name="banner_ad_unit_id">ca-app-pub-2713759975650849/1765735635</string>
+    <string name="native_advanced_ad_unit_id">ca-app-pub-2713759975650849/9478782111</string>
+    <string name="native_advanced_ad_unit_test_id">ca-app-pub-3940256099942544/2247696110</string>
+
     <string name="location_permission_grant_request_message">애플리케이션을 사용하려면 위치 권한을 부여해야합니다.</string>
     <string name="confirmed_patients">확진환자</string>
     <string name="test_result_negative">검사결과(음성)</string>
@@ -25,4 +28,6 @@
     <string name="dropdown_arrow">Dropdown arrow</string>
     <string name="make_a_call">전화 걸기</string>
     <string name="donate">후원하기</string>
+    <string name="open_source_licenses">오픈소스 라이선스</string>
+    <string name="android">안드로이드</string>
 </resources>

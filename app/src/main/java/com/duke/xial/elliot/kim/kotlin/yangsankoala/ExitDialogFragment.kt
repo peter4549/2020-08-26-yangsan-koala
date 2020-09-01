@@ -6,22 +6,13 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
-import com.google.android.gms.ads.AdListener
+import com.duke.xial.elliot.kim.kotlin.yangsankoala.activities.MainActivity
+import com.duke.xial.elliot.kim.kotlin.yangsankoala.utilities.goToPlayStore
 import kotlinx.android.synthetic.main.fragment_exit_dialog.view.*
 
 class ExitDialogFragment: DialogFragment() {
 
     private lateinit var alertDialog: AlertDialog
-    private val adListener = object : AdListener() {
-        override fun onAdFailedToLoad(p0: Int) {
-            println("$TAG: onAdFailedToLoad")
-        }
-
-        override fun onAdLoaded() {
-            super.onAdLoaded()
-            println("$TAG: onAdLoaded")
-        }
-    }
 
     @SuppressLint("InflateParams")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -32,7 +23,7 @@ class ExitDialogFragment: DialogFragment() {
         val view = requireActivity().layoutInflater.inflate(R.layout.fragment_exit_dialog, null)
         builder.setView(view)
 
-        view.ad_view.adListener = adListener
+        view.ad_view.adListener = (requireActivity() as MainActivity).adListener
         view.ad_view.loadAd((requireActivity() as MainActivity).adRequest)
 
         view.button_go_to_review.setOnClickListener {

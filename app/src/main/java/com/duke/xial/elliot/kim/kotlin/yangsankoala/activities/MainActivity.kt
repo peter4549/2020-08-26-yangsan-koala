@@ -1,4 +1,4 @@
-package com.duke.xial.elliot.kim.kotlin.yangsankoala
+package com.duke.xial.elliot.kim.kotlin.yangsankoala.activities
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -12,16 +12,23 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import com.duke.xial.elliot.kim.kotlin.yangsankoala.ConfirmedPatients.createPatientMarkers
-import com.duke.xial.elliot.kim.kotlin.yangsankoala.ConfirmedPatients.loadConfirmedPatients
-import com.duke.xial.elliot.kim.kotlin.yangsankoala.ScreeningClinics.createClinicsMarkers
-import com.duke.xial.elliot.kim.kotlin.yangsankoala.SituationNotificationKey.CONFIRMED_PATIENTS
-import com.duke.xial.elliot.kim.kotlin.yangsankoala.SituationNotificationKey.DATE
-import com.duke.xial.elliot.kim.kotlin.yangsankoala.SituationNotificationKey.SPAN
-import com.duke.xial.elliot.kim.kotlin.yangsankoala.SituationNotificationKey.TEST_RESULTS
-import com.duke.xial.elliot.kim.kotlin.yangsankoala.SituationNotificationKey.UNDER_INSPECTION
+import com.duke.xial.elliot.kim.kotlin.yangsankoala.*
+import com.duke.xial.elliot.kim.kotlin.yangsankoala.data.ConfirmedPatients.createPatientMarkers
+import com.duke.xial.elliot.kim.kotlin.yangsankoala.data.ConfirmedPatients.loadConfirmedPatients
+import com.duke.xial.elliot.kim.kotlin.yangsankoala.data.ScreeningClinics.createClinicsMarkers
+import com.duke.xial.elliot.kim.kotlin.yangsankoala.data.ConfirmedPatientModel
+import com.duke.xial.elliot.kim.kotlin.yangsankoala.data.ConfirmedPatients
+import com.duke.xial.elliot.kim.kotlin.yangsankoala.data.SituationNotificationKey.CONFIRMED_PATIENTS
+import com.duke.xial.elliot.kim.kotlin.yangsankoala.data.SituationNotificationKey.DATE
+import com.duke.xial.elliot.kim.kotlin.yangsankoala.data.SituationNotificationKey.SPAN
+import com.duke.xial.elliot.kim.kotlin.yangsankoala.data.SituationNotificationKey.TEST_RESULTS
+import com.duke.xial.elliot.kim.kotlin.yangsankoala.data.SituationNotificationKey.UNDER_INSPECTION
+import com.duke.xial.elliot.kim.kotlin.yangsankoala.licenses.OpenSourceLicenseActivity
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
+import com.google.android.gms.ads.formats.NativeAdOptions
+import com.google.android.gms.ads.formats.UnifiedNativeAd
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main_drawer.*
 import kotlinx.android.synthetic.main.custom_callout_balloon.view.*
@@ -35,11 +42,23 @@ import timber.log.Timber
 class MainActivity : AppCompatActivity(), MapView.POIItemEventListener, MapView.CurrentLocationEventListener {
 
     lateinit var adRequest: AdRequest
+    private lateinit var mapView: MapView
     private var confirmedPatients: ArrayList<ConfirmedPatientModel>? = null
     private var displayCircles = true
     private var displayPolyline = true
+    private var mapMovingCount = 0
     private var mapTypePosition = 0
     private var exitDialogFragment = ExitDialogFragment()
+    val adListener = object : AdListener() {
+        override fun onAdFailedToLoad(p0: Int) {
+            Timber.d("onAdFailedToLoad")
+        }
+
+        override fun onAdLoaded() {
+            super.onAdLoaded()
+            Timber.d("onAdLoaded")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,26 +72,33 @@ class MainActivity : AppCompatActivity(), MapView.POIItemEventListener, MapView.
 
         adRequest = AdRequest.Builder().build()
         setSupportActionBar(toolbar)
-        setMenuItemClickActions()
+        setNavigationViewItemClickActions()
 
         @Suppress("SpellCheckingInspection")
         // Kakao Maps
-        val mapView = MapView(this)
-        map_view_container.addView(mapView)
-        mapView.setMapCenterPoint(MapPoint.mapPointWithGeoCoord(35.3349920568695, 129.037272788817), true)
-        setSpinner(spinner_map_type, mapView)
+        if (!::mapView.isInitialized) {
+            mapView = MapView(this)
+            map_view_container.addView(mapView)
+            mapView.setMapCenterPoint(
+                MapPoint.mapPointWithGeoCoord(
+                    35.3349920568695,
+                    129.037272788817
+                ), true
+            )
+            setSpinner(spinner_map_type, mapView)
 
-        // Crawling
-        val job = Job()
-        CoroutineScope(Dispatchers.IO + job).launch {
-            val map = ConfirmedPatients.getSituationNotificationMap()
-            setStateNotificationUi(map)
-            launch {
-                confirmedPatients = loadConfirmedPatients()
-            }.join()
+            // Crawling
+            val job = Job()
+            CoroutineScope(Dispatchers.IO + job).launch {
+                val map = ConfirmedPatients.getSituationNotificationMap()
+                setStateNotificationUi(map)
+                launch {
+                    confirmedPatients = loadConfirmedPatients()
+                }.join()
 
-            launch(Dispatchers.Main) {
-                initializeMapViewOptions(mapView)
+                launch(Dispatchers.Main) {
+                    initializeMapViewOptions(mapView)
+                }
             }
         }
     }
@@ -140,12 +166,26 @@ class MainActivity : AppCompatActivity(), MapView.POIItemEventListener, MapView.
         }
     }
 
-    private fun setMenuItemClickActions() {
+    private fun setNavigationViewItemClickActions() {
         text_view_open_source_licenses.setOnClickListener {
-            startActivity(Intent(this, OssLicensesMenuActivity::class.java))
+            startActivityForResult(Intent(this, OpenSourceLicenseActivity::class.java), REQUEST_CODE_OPEN_SOURCE_LICENSES)
         }
         text_view_donation.setOnClickListener {
-            startActivity(Intent(this, DonationActivity::class.java))
+            startActivityForResult(Intent(this, DonationActivity::class.java), REQUEST_CODE_DONATION)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            REQUEST_CODE_OPEN_SOURCE_LICENSES -> {
+                if (drawer_layout_activity_main.isDrawerOpen(GravityCompat.END))
+                    drawer_layout_activity_main.closeDrawer(GravityCompat.END)
+            }
+            REQUEST_CODE_DONATION -> {
+                if (drawer_layout_activity_main.isDrawerOpen(GravityCompat.END))
+                    drawer_layout_activity_main.closeDrawer(GravityCompat.END)
+            }
         }
     }
 
@@ -263,8 +303,10 @@ class MainActivity : AppCompatActivity(), MapView.POIItemEventListener, MapView.
 
     // Start: CurrentLocationEventListener
     override fun onCurrentLocationUpdate(mapView: MapView?, p1: MapPoint?, p2: Float) {
-        mapView?.currentLocationTrackingMode =
-            MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving
+        if (mapMovingCount > 2)
+            mapView?.currentLocationTrackingMode =
+                MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeadingWithoutMapMoving
+        ++mapMovingCount
     }
     override fun onCurrentLocationDeviceHeadingUpdate(p0: MapView?, p1: Float) {  }
     override fun onCurrentLocationUpdateFailed(p0: MapView?) {  }
@@ -319,5 +361,8 @@ class MainActivity : AppCompatActivity(), MapView.POIItemEventListener, MapView.
         private const val KEY_DISPLAY_POLYLINE = "key_display_polyline"
         private const val KEY_MAP_TYPE_POSITION = "key_map_type_position"
         private const val TAG = "MainActivity"
+
+        private const val REQUEST_CODE_DONATION = 1000
+        private const val REQUEST_CODE_OPEN_SOURCE_LICENSES = 1001
     }
 }
