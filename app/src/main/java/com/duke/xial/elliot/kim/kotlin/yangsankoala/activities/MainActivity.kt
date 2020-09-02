@@ -24,11 +24,8 @@ import com.duke.xial.elliot.kim.kotlin.yangsankoala.data.SituationNotificationKe
 import com.duke.xial.elliot.kim.kotlin.yangsankoala.data.SituationNotificationKey.TEST_RESULTS
 import com.duke.xial.elliot.kim.kotlin.yangsankoala.data.SituationNotificationKey.UNDER_INSPECTION
 import com.duke.xial.elliot.kim.kotlin.yangsankoala.licenses.OpenSourceLicenseActivity
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.formats.NativeAdOptions
-import com.google.android.gms.ads.formats.UnifiedNativeAd
+import com.google.android.gms.ads.MobileAds
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main_drawer.*
 import kotlinx.android.synthetic.main.custom_callout_balloon.view.*
@@ -42,23 +39,14 @@ import timber.log.Timber
 class MainActivity : AppCompatActivity(), MapView.POIItemEventListener, MapView.CurrentLocationEventListener {
 
     lateinit var adRequest: AdRequest
+    lateinit var nativeAdvancedAd: NativeAdvancedAd
+    private lateinit var exitDialogFragment: EndDialog
     private lateinit var mapView: MapView
     private var confirmedPatients: ArrayList<ConfirmedPatientModel>? = null
     private var displayCircles = true
     private var displayPolyline = true
     private var mapMovingCount = 0
     private var mapTypePosition = 0
-    private var exitDialogFragment = ExitDialogFragment()
-    val adListener = object : AdListener() {
-        override fun onAdFailedToLoad(p0: Int) {
-            Timber.d("onAdFailedToLoad")
-        }
-
-        override fun onAdLoaded() {
-            super.onAdLoaded()
-            Timber.d("onAdLoaded")
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +57,19 @@ class MainActivity : AppCompatActivity(), MapView.POIItemEventListener, MapView.
 
         setupTimber()
         restoreOptions()
+        MobileAds.initialize(this)
+
+        /*
+        CoroutineScope(Dispatchers.IO).launch {
+            MobileAds.initialize(this@MainActivity)
+            nativeAdvancedAd = NativeAdvancedAd(this@MainActivity)
+            val view = layoutInflater.inflate(R.layout.fragment_end_dialog, null)
+            nativeAdvancedAd.refreshAd(view.ad_frame)
+            exitDialogFragment = ExitDialogFragment(view)
+        }
+
+         */
+        exitDialogFragment = EndDialog(this)
 
         adRequest = AdRequest.Builder().build()
         setSupportActionBar(toolbar)

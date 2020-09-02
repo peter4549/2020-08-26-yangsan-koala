@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorDonationActivityDefaultBackground"
     tools:context=".activities.DonationActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -25,33 +26,37 @@
         android:id="@+id/text_view_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_marginTop="32dp"
         android:text="커피 한 잔의 후원은 개발자에게 큰 힘이 됩니다."
-        app:layout_constraintBottom_toTopOf="@+id/frame_layout_donate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
         tools:ignore="HardcodedText" />
 
     <FrameLayout
         android:id="@+id/frame_layout_donate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="16dp"
+        android:background="#81d3f9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:background="#81d3f9">
+        app:layout_constraintTop_toBottomOf="@+id/text_view_message">
 
         <Button
             android:id="@+id/button_donate"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:onClick="donate"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
-            android:textColor="@android:color/white"
-            android:text="@string/donate"
             android:elevation="8dp"
-            android:fontFamily="@font/font_family_nexon_lv2_gothic_bold" />
+            android:fontFamily="@font/font_family_nexon_lv2_gothic_bold"
+            android:onClick="donate"
+            android:gravity="center_vertical|start"
+            android:paddingEnd="24dp"
+            android:paddingStart="24dp"
+            android:text="@string/donate"
+            android:textColor="@android:color/white"
+            app:drawableEndCompat="@drawable/ic_baseline_chevron_right_24"/>
 
     </FrameLayout>
 

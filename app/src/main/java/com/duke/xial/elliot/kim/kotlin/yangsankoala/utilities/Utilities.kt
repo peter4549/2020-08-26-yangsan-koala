@@ -1,15 +1,19 @@
 package com.duke.xial.elliot.kim.kotlin.yangsankoala.utilities
 
-import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Typeface
 import android.net.Uri
+import android.os.Build
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
 
 /*
 private fun printHashKey(context: Context) {
@@ -32,7 +36,16 @@ private fun printHashKey(context: Context) {
 
 fun showToast(context: Context, text: String, duration: Int = Toast.LENGTH_LONG) {
     CoroutineScope(Dispatchers.Main).launch {
-        Toast.makeText(context, text, duration).show()
+        val toast = Toast.makeText(context, text, duration)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+            toast.show()
+        else {
+            @Suppress("DEPRECATION")
+            val view = toast.view as LinearLayout
+            val textView = view.getChildAt(0) as TextView
+            textView.typeface = Typeface.DEFAULT
+            toast.show()
+        }
     }
 }
 
@@ -52,7 +65,7 @@ fun goToPlayStore(context: Context) {
         )
     } catch (e: ActivityNotFoundException) {
         context.startActivity(
-            Intent (
+            Intent(
                 Intent.ACTION_VIEW,
                 Uri.parse("https://play.google.com/store/apps/details?id=${context.packageName}")
             )

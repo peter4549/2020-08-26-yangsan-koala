@@ -2,4 +2,8 @@
 <resources>
     <dimen name="dialog_width_240">240dp</dimen>
     <dimen name="dialog_width_300">300dp</dimen>
+    <dimen name="ad_frame_width">300dp</dimen>
+    <dimen name="ad_media_width">250dp</dimen>
+    <dimen name="ad_media_height">150dp</dimen>
+
 </resources>
